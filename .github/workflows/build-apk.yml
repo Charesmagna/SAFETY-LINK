@@ -1,0 +1,37 @@
+name: Build Cordova APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Add Android platform (if missing)
+        run: |
+          if [ ! -d "platforms/android" ]; then
+            cordova platform add android
+          fi
+
+      - name: Prepare Cordova
+        run: cordova prepare
+
+      - name: Build APK
+        run: cordova build android --debug
