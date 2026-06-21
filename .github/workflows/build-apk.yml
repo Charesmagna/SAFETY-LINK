@@ -35,3 +35,8 @@ jobs:
 
       - name: Build APK
         run: cordova build android --debug
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: safety-link-apk
+          path: platforms/android/app/build/outputs/**/*.apk
