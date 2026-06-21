@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String
+  createdAt DateTime  @default(now())
+  users     User[]
+  responders Responder[]
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @db.Uuid
+  phone     String   @unique
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+
+  @@index([tenantId])
+}
+
+model Responder {
+  id        String   @id @default(uuid()) @db.Uuid
+  tenantId  String   @db.Uuid
+  name      String?
+  status    String?
+  createdAt DateTime @default(now())
+  locations ResponderLocation[]
+
+  @@index([tenantId])
+}
+
+model ResponderLocation {
+  id          String   @id @default(uuid()) @db.Uuid
+  responderId String   @db.Uuid
+  tenantId    String   @db.Uuid
+  lat         Float?
+  lng         Float?
+  rssi        Int?
+  battery     Int?
+  createdAt   DateTime @default(now())
+
+  @@index([tenantId])
+  @@index([responderId])
+}
+
+model OTPSession {
+  id        String   @id @default(uuid()) @db.Uuid
+  phone     String
+  tenantId  String?  @db.Uuid
+  codeHash  String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+}
