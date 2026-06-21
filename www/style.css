@@ -1,0 +1,617 @@
+/* ==========================================================================
+   SAFETY-LINK PREMIUM DARK CONSOLE STYLING SPECIFICATION (HEX CODE ACCENT MATCH)
+   ========================================================================== */
+
+:root {
+    --bg-jet-dark: #020617;
+    --bg-card-dark: #0b1329;
+    --border-glow-blue: #1e293b;
+    --neon-red: #ef4444;
+    --neon-blue: #3b82f6;
+    --neon-green: #22c55e;
+    --neon-amber: #f59e0b;
+    --text-slate: #94a3b8;
+    --text-bright: #f8fafc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-jet-dark);
+    color: var(--text-bright);
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+.app-container {
+    width: 100vw;
+    min-height: 100vh;
+    position: relative;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ==========================================
+   ONBOARDING & TELEPHONY AUTH LAYOUTS
+   ========================================== */
+.panel-layer {
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-header {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 32px;
+}
+
+.brand-badge {
+    display: inline-block;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid var(--neon-blue);
+    color: var(--neon-blue);
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.auth-header h1 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    color: var(--text-slate);
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.auth-card {
+    background-color: var(--bg-card-dark);
+    border: 1px solid var(--border-glow-blue);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 420px;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.field-label {
+    display: block;
+    color: var(--text-slate);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background: #0f172a;
+    border: 1px solid var(--border-glow-blue);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.country-prefix {
+    color: var(--text-slate);
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.input-wrapper input {
+    background: transparent;
+    border: none;
+    color: var(--text-bright);
+    font-size: 1.1rem;
+    width: 100%;
+    outline: none;
+}
+
+.otp-field {
+    width: 100%;
+    background: #0f172a;
+    border: 1px solid var(--border-glow-blue);
+    border-radius: 8px;
+    padding: 14px;
+    color: var(--text-bright);
+    font-size: 1.5rem;
+    text-align: center;
+    letter-spacing: 6px;
+    outline: none;
+    margin-bottom: 16px;
+    font-family: monospace;
+}
+
+.prime-btn {
+    width: 100%;
+    background: var(--neon-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.prime-btn.positive { background: var(--neon-green); }
+
+.role-desc {
+    color: var(--text-slate);
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+}
+
+.role-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.role-card {
+    background: #0f172a;
+    border: 1px solid var(--border-glow-blue);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text-bright);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s;
+}
+
+.role-card .role-icon { font-size: 1.5rem; margin-bottom: 4px; }
+.role-card .role-title { font-weight: 700; font-size: 1rem; }
+.role-card .role-sub { font-size: 0.75rem; color: var(--text-slate); }
+.role-card:hover { border-color: var(--neon-blue); background: rgba(59, 130, 246, 0.05); }
+.role-card.operations:hover { border-color: var(--neon-amber); background: rgba(245, 158, 11, 0.05); }
+
+/* ==========================================
+   CLIENT TERMINAL WORKSPACE VIEWPORTS
+   ========================================== */
+.console-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+.status-indicator.live { background: rgba(34, 197, 94, 0.1); color: var(--neon-green); border: 1px solid var(--neon-green); }
+
+.device-token {
+    font-family: monospace;
+    color: var(--text-slate);
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.terminal-workspace {
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Big Panic Button System Elements */
+.trigger-core {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 0;
+}
+
+.panic-node-element {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #dc2626 0%, #7f1d1d 100%);
+    border: 6px solid #450a0a;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    box-shadow: 0 0 30px rgba(220, 38, 38, 0.3);
+    transition: transform 0.1s, box-shadow 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.panic-node-element.holding {
+    transform: scale(0.95);
+    background: radial-gradient(circle, #ef4444 0%, #b91c1c 100%);
+    box-shadow: 0 0 50px rgba(239, 68, 68, 0.6);
+}
+
+/* Diagnostic & Widget Cards */
+.diagnostic-card, .widget-simulation-card {
+    background: var(--bg-card-dark);
+    border: 1px solid var(--border-glow-blue);
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.card-header-mix {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.card-header-mix h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--text-bright);
+}
+
+.drill-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--text-slate);
+    background: #0f172a;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.terminal-ticker-box {
+    background: #020617;
+    border: 1px solid #1e293b;
+    border-radius: 6px;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 0.75rem;
+    color: var(--neon-green);
+    height: 90px;
+    overflow-y: auto;
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+.section-instruction {
+    font-size: 0.8rem;
+    color: var(--text-slate);
+    margin-bottom: 12px;
+}
+
+.mock-homescreen-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #0f172a;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.widget-shortcut-mock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #1e293b;
+    padding: 8px;
+    border-radius: 8px;
+    width: 64px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.mini-panic-icon { font-size: 1.2rem; }
+.widget-txt { font-size: 0.6rem; margin-top: 2px; color: var(--text-bright); font-weight: bold; }
+
+.action-outline-btn {
+    background: transparent;
+    border: 1px dashed var(--neon-blue);
+    color: var(--neon-blue);
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* ==========================================
+   PATROLLER MOTHERBOARD COMMAND CONSOLE
+   ========================================== */
+.motherboard-header {
+    background: #0f172a;
+    border-bottom: 1px solid var(--border-glow-blue);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.system-tag {
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: var(--neon-blue);
+    letter-spacing: 2px;
+}
+
+.motherboard-header h1 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.server-badge {
+    font-family: monospace;
+    font-size: 0.75rem;
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--neon-green);
+    border: 1px solid var(--neon-green);
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+.motherboard-grid-workspace {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 20px;
+    padding: 20px;
+    flex-grow: 1;
+    height: calc(100vh - 75px);
+}
+
+.workspace-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+}
+
+.console-box {
+    background: var(--bg-card-dark);
+    border: 1px solid var(--border-glow-blue);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.box-header {
+    background: #0f172a;
+    padding: 10px 14px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-glow-blue);
+    color: var(--text-slate);
+}
+
+.motherboard-map-canvas {
+    width: 100%;
+    flex-grow: 1;
+    min-height: 250px;
+    background: #020617;
+}
+
+.database-box { flex-grow: 1; height: 300px; }
+
+.table-scroll-wrapper {
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.matrix-datagrid {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.8rem;
+}
+
+.matrix-datagrid th {
+    background: #0f172a;
+    padding: 10px;
+    color: var(--text-slate);
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+}
+
+.matrix-datagrid td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #1e293b;
+    vertical-align: middle;
+}
+
+.badge-status {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+.badge-status.active { background: rgba(34, 197, 94, 0.1); color: var(--neon-green); }
+.badge-status.suspended { background: rgba(239, 68, 68, 0.1); color: var(--neon-red); }
+
+.table-btn {
+    background: #1e293b;
+    border: 1px solid var(--border-glow-blue);
+    color: var(--text-bright);
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 4px;
+}
+.table-btn.warn { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); color: var(--neon-red); }
+
+/* Right Controls Column Configurations */
+.ble-widget-row {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.action-trigger-btn {
+    width: 100%;
+    background: var(--neon-blue);
+    border: none;
+    color: white;
+    padding: 10px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.action-trigger-btn.blue-accent { background: #2563eb; }
+
+.matrix-input-frozen {
+    width: 100%;
+    background: #020617;
+    border: 1px solid var(--border-glow-blue);
+    padding: 8px;
+    border-radius: 4px;
+    color: var(--neon-amber);
+    font-family: monospace;
+    font-size: 0.75rem;
+    text-align: center;
+    outline: none;
+}
+
+.matrix-form {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+}
+
+.input-node-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.input-node-group label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-slate);
+}
+
+.matrix-text-field {
+    background: #020617;
+    border: 1px solid var(--border-glow-blue);
+    padding: 8px 10px;
+    border-radius: 4px;
+    color: var(--text-bright);
+    font-size: 0.8rem;
+    outline: none;
+    font-family: monospace;
+}
+
+/* ==========================================
+   UNIFIED COUNTDOWN OVERLAY WINDOWS
+   ========================================== */
+.overlay-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(2, 6, 23, 0.95);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.overlay-glass-card {
+    background: #0b1329;
+    border: 2px solid var(--neon-red);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(239, 68, 68, 0.4);
+}
+
+.threat-alert-banner {
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--neon-red);
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+}
+
+.giant-numerical-countdown {
+    font-size: 5.5rem;
+    font-weight: 900;
+    color: var(--text-bright);
+    font-family: monospace;
+    line-height: 1;
+    margin-bottom: 16px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.escalation-notice-text {
+    font-size: 0.85rem;
+    color: var(--text-slate);
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.abort-defense-trigger {
+    width: 100%;
+    background: transparent;
+    border: 2px solid var(--neon-green);
+    color: var(--neon-green);
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.abort-defense-trigger:hover {
+    background: rgba(34, 197, 94, 0.1);
+}
+
+/* ==========================================
+   RESPONSIVE LAYOUT CONSTRAINTS FOR MOBILE SCREENS
+   ========================================== */
+@media (max-width: 900px) {
+    .motherboard-grid-workspace {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow-y: auto;
+    }
+    body { height: auto; overflow-y: auto; }
+    .database-box { height: 350px; }
+}

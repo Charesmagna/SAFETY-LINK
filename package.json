@@ -1,0 +1,33 @@
+{
+  "name": "io.github.charesmagna.safetylink",
+  "displayName": "SafetyLink",
+  "version": "1.0.0",
+  "description": "Community emergency panic-button and dispatch system for neighbourhood watch.",
+  "main": "index.js",
+  "scripts": {
+    "setup": "cordova platform add android && cordova plugin add cordova-plugin-android-permissions cordova-plugin-geolocation cordova-plugin-sms mx.ferreyra.callnumber",
+    "build": "cordova build android",
+    "build-release": "cordova build android --release",
+    "run": "cordova run android"
+  },
+  "keywords": ["ecosystem:cordova"],
+  "author": "SafetyLink Team",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "cordova-plugin-android-permissions": "^1.1.5",
+    "cordova-plugin-geolocation": "^4.1.0",
+    "cordova-plugin-sms": "^1.0.5",
+    "mx.ferreyra.callnumber": "^0.0.2"
+  },
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-android-permissions": {},
+      "cordova-plugin-geolocation": {
+        "GPS_REQUIRED": "true"
+      },
+      "cordova-plugin-sms": {},
+      "mx.ferreyra.callnumber": {}
+    },
+    "platforms": ["android"]
+  }
+}

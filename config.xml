@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+  SafetyLink config.xml — FIXED version
+  Changes from original:
+    1. cordova-plugin-android-permissions added (was missing — critical for Android 6+)
+    2. cordova-plugin-geolocation standardised to ^4.1.0 (was ^4.1.0 here but ^5.0.0 in package.json — now in sync)
+    3. call-number replaced with canonical ID mx.ferreyra.callnumber (resolves naming inconsistency)
+    4. www/config.xml duplicate deleted — only this root config.xml is used by Cordova CLI
+-->
+<widget id="io.github.charesmagna.safetylink" version="1.0.0"
+        xmlns="http://www.w3.org/ns/widgets"
+        xmlns:cdv="http://cordova.apache.org/ns/1.0">
+
+    <preference name="android-minSdkVersion"    value="26" />
+    <preference name="android-targetSdkVersion" value="34" />
+
+    <name>SafetyLink</name>
+    <description>Community emergency panic-button and dispatch system for neighbourhood watch.</description>
+    <author email="dev@cordova.apache.org" href="https://cordova.apache.org">SafetyLink Team</author>
+
+    <content src="index.html" />
+
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+
+    <!-- FIX 1: Runtime permissions plugin — required for Android 6+ SMS/CALL_PHONE grants -->
+    <plugin name="cordova-plugin-android-permissions" spec="^1.1.5" />
+
+    <!-- FIX 2: Geolocation pinned to ^4.1.0 in both files (was mismatched with package.json at ^5.0.0) -->
+    <plugin name="cordova-plugin-geolocation" spec="^4.1.0" />
+
+    <!-- SMS plugin — unchanged -->
+    <plugin name="cordova-plugin-sms" spec="^1.0.5" />
+
+    <!-- FIX 3: Canonical plugin ID is mx.ferreyra.callnumber (was also listed as call-number — pick one) -->
+    <plugin name="mx.ferreyra.callnumber" spec="^0.0.2" />
+
+</widget>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#020617">
+    <title>SafetyLink</title>
+    <link rel="stylesheet" href="leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .tab-bar{display:flex;background:#0f172a;border-bottom:1px solid #1e293b;overflow-x:auto;-webkit-overflow-scrolling:touch}
+        .tab-btn{flex:1;min-width:70px;padding:10px 4px;background:none;border:none;color:#64748b;font-family:monospace;font-size:0.62rem;letter-spacing:.5px;cursor:pointer;border-bottom:2px solid transparent;text-align:center;white-space:nowrap}
+        .tab-btn.active{color:#ef4444;border-bottom-color:#ef4444}
+        .tab-panel{display:none;padding:12px}.tab-panel.active{display:block}
+        .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:0.62rem;font-weight:700;letter-spacing:.5px;cursor:pointer}
+        .badge-red{background:#7f1d1d;color:#fca5a5}.badge-orange{background:#78350f;color:#fcd34d}
+        .badge-green{background:#14532d;color:#86efac}.badge-gray{background:#1e293b;color:#94a3b8}
+        .incident-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:14px;margin-bottom:10px;cursor:pointer}
+        .incident-card.tier-2{border-left:3px solid #f59e0b}.incident-card.tier-3{border-left:3px solid #ef4444}
+        .incident-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+        .incident-title{font-family:monospace;font-size:0.8rem;color:#f8fafc;font-weight:700}
+        .incident-meta{font-family:monospace;font-size:0.62rem;color:#475569}
+        .responder-card{background:#0f172a;border:1px solid #ef4444;border-radius:8px;padding:16px;margin-bottom:12px}
+        .accept-btn{width:100%;padding:12px;background:#dc2626;border:none;color:#fff;font-family:monospace;font-weight:700;letter-spacing:1px;border-radius:6px;cursor:pointer;margin-top:10px;font-size:0.8rem}
+        .blood-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+        .blood-btn{padding:10px 0;background:#1e293b;border:2px solid #334155;border-radius:6px;color:#94a3b8;font-family:monospace;font-size:0.8rem;cursor:pointer;text-align:center}
+        .blood-btn.selected{background:#7f1d1d;border-color:#ef4444;color:#fff}
+        .ble-device{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#0f172a;border:1px solid #1e293b;border-radius:6px;margin-bottom:6px}
+        .queue-item{padding:8px 12px;background:#1c1917;border-left:3px solid #f59e0b;border-radius:0 6px 6px 0;margin-bottom:6px;font-family:monospace;font-size:0.62rem;color:#d97706}
+        .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+        .stat-box{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:14px;text-align:center}
+        .stat-num{font-family:monospace;font-size:1.6rem;font-weight:700;color:#ef4444}
+        .stat-lbl{font-family:monospace;font-size:0.58rem;color:#475569;letter-spacing:.5px;margin-top:4px}
+        .stat-box.green .stat-num{color:#22c55e}.stat-box.yellow .stat-num{color:#f59e0b}.stat-box.blue .stat-num{color:#3b82f6}
+        .audit-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #1e293b;font-family:monospace;font-size:0.62rem}
+        .audit-time{color:#475569;min-width:65px;flex-shrink:0}.audit-action{color:#94a3b8}
+        .call-next-btn{display:none;margin-top:12px;width:100%;padding:12px;background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;font-family:monospace;font-weight:700;letter-spacing:1px;border-radius:6px;cursor:pointer;font-size:0.8rem}
+        .call-next-btn.visible{display:block}
+        .escalate-btn{width:100%;padding:8px;background:#78350f;border:1px solid #f59e0b;color:#fcd34d;font-family:monospace;font-size:0.7rem;border-radius:4px;cursor:pointer;margin-top:6px}
+        .resolve-btn{width:100%;padding:8px;background:#14532d;border:1px solid #22c55e;color:#86efac;font-family:monospace;font-size:0.7rem;border-radius:4px;cursor:pointer;margin-top:6px}
+        .empty-state{font-family:monospace;font-size:0.75rem;color:#475569;text-align:center;padding:24px}
+        textarea.matrix-text-field{resize:vertical}
+    </style>
+</head>
+<body>
+<div class="app-container">
+
+    <!-- AUTH SCREEN -->
+    <div id="auth-screen" class="panel-layer">
+        <header class="auth-header">
+            <div class="brand-badge">SAFETY-LINK SYSTEMS</div>
+            <h1>TERMINAL PROVISIONING</h1>
+            <p class="subtitle">Secure Device Identity Activation</p>
+        </header>
+        <div class="auth-card">
+            <label class="field-label">FULL LEGAL NAME</label>
+            <input type="text" id="auth-name" placeholder="Enter full name" class="matrix-text-field" style="margin-bottom:15px;width:100%">
+            <label class="field-label">CELLULAR LINE (+27)</label>
+            <div class="input-wrapper" style="margin-bottom:15px">
+                <span class="country-prefix">+27</span>
+                <input type="tel" id="auth-phone" placeholder="82 123 4567" maxlength="9">
+            </div>
+            <label class="field-label">COMMUNITY ORG CODE</label>
+            <input type="text" id="auth-org-id" placeholder="e.g. LSNW-A1" class="matrix-text-field" style="margin-bottom:20px;width:100%;text-transform:uppercase">
+            <button id="activate-terminal-btn" class="prime-btn">INITIALIZE CORE SYSTEM</button>
+        </div>
+        <footer class="tactical-footer" style="margin-top:30px;text-align:center;font-family:monospace;font-size:0.7rem;color:#475569;letter-spacing:1px">
+            <div>POWERED BY <span style="color:#f8fafc;font-weight:bold">TM MEDIA SOLUTIONS</span></div>
+        </footer>
+    </div>
+
+    <!-- CONSOLE SCREEN -->
+    <div id="console-screen" class="panel-layer hidden">
+        <header class="console-header">
+            <div class="system-status-pill">
+                <span class="pulse-indicator"></span>
+                <span id="system-status-lbl">SYSTEM: INITIALIZING</span>
+            </div>
+            <div class="operator-profile">
+                <span id="profile-name-lbl" class="operator-name">---</span>
+                <span id="profile-role-lbl" class="operator-role">OPERATOR</span>
+            </div>
+        </header>
+
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('panic')">⚡ PANIC</button>
+            <button class="tab-btn" onclick="switchTab('incidents')">🗂 INCIDENTS</button>
+            <button class="tab-btn" onclick="switchTab('responder')">🛡 RESPONDER</button>
+            <button class="tab-btn" onclick="switchTab('medical')">🩸 MEDICAL</button>
+            <button class="tab-btn" onclick="switchTab('analytics')">📊 ANALYTICS</button>
+            <button class="tab-btn" onclick="switchTab('settings')">⚙ SETTINGS</button>
+        </div>
+
+        <!-- PANIC TAB -->
+        <div id="tab-panic" class="tab-panel active">
+            <div class="console-grid">
+                <div class="grid-left-panel">
+                    <div class="console-card map-card">
+                        <div class="card-header">TACTICAL COORDINATE RADAR</div>
+                        <div id="gis-radar-viewport"></div>
+                    </div>
+                    <div class="console-card terminal-card">
+                        <div class="card-header">DIAGNOSTIC TERMINAL</div>
+                        <div id="diagnostic-ticker-terminal" class="terminal-log"></div>
+                    </div>
+                </div>
+                <div class="grid-right-panel">
+                    <div class="console-card trigger-card">
+                        <div id="trigger-button" class="tactical-panic-hub">
+                            <div class="inner-core-node">
+                                <span class="panic-label">HOLD 2S</span>
+                                <span class="panic-sublabel">EMERGENCY ACTIVATION</span>
+                            </div>
+                        </div>
+                        <div class="drill-mode-panel" style="margin-top:15px">
+                            <button id="drill-mode-toggle" class="drill-btn">SYSTEM DRILL / TEST MODE [OFF]</button>
+                        </div>
+                    </div>
+                    <div class="console-card" style="padding:12px">
+                        <div class="card-header" style="margin-bottom:8px">OFFLINE SMS QUEUE</div>
+                        <div id="sms-queue-display" style="max-height:110px;overflow-y:auto">
+                            <div class="empty-state" style="padding:10px">Queue empty</div>
+                        </div>
+                        <button onclick="flushSMSQueue()" style="margin-top:8px;width:100%;padding:6px;background:#1e293b;border:1px solid #334155;color:#94a3b8;font-family:monospace;font-size:0.65rem;border-radius:4px;cursor:pointer">↻ RETRY QUEUED SMS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INCIDENTS TAB -->
+        <div id="tab-incidents" class="tab-panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+                <div class="card-header" style="margin:0">INCIDENT LOG</div>
+                <button onclick="createManualIncident()" style="padding:6px 14px;background:#dc2626;border:none;color:#fff;font-family:monospace;font-size:0.68rem;border-radius:4px;cursor:pointer">+ NEW</button>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+                <span class="badge badge-gray" onclick="filterIncidents('all')" id="f-all">ALL</span>
+                <span class="badge badge-red" onclick="filterIncidents('active')" id="f-active">ACTIVE</span>
+                <span class="badge badge-green" onclick="filterIncidents('resolved')" id="f-resolved">RESOLVED</span>
+                <span class="badge badge-gray" onclick="filterIncidents('drill')" id="f-drill">DRILL</span>
+            </div>
+            <div id="incident-list"><div class="empty-state">Loading incidents…</div></div>
+        </div>
+
+        <!-- RESPONDER TAB -->
+        <div id="tab-responder" class="tab-panel">
+            <div class="card-header" style="margin-bottom:12px">ACTIVE INCIDENTS — ACCEPT &amp; RESPOND</div>
+            <div id="responder-feed"><div class="empty-state">Loading active incidents…</div></div>
+            <button onclick="loadResponderFeed()" style="width:100%;padding:8px;margin-top:10px;background:#1e293b;border:1px solid #334155;color:#94a3b8;font-family:monospace;font-size:0.68rem;border-radius:4px;cursor:pointer">↻ REFRESH FEED</button>
+        </div>
+
+        <!-- MEDICAL TAB -->
+        <div id="tab-medical" class="tab-panel">
+            <div class="card-header" style="margin-bottom:8px">MEDICAL PROFILE</div>
+            <p style="font-family:monospace;font-size:0.62rem;color:#94a3b8;margin-bottom:14px;line-height:1.5">Shared with responders automatically when panic fires.</p>
+            <label class="field-label">BLOOD TYPE</label>
+            <div class="blood-grid" style="margin-bottom:14px">
+                <button class="blood-btn" onclick="selectBlood('A+')" id="bt-Apos">A+</button>
+                <button class="blood-btn" onclick="selectBlood('A-')" id="bt-Aneg">A-</button>
+                <button class="blood-btn" onclick="selectBlood('B+')" id="bt-Bpos">B+</button>
+                <button class="blood-btn" onclick="selectBlood('B-')" id="bt-Bneg">B-</button>
+                <button class="blood-btn" onclick="selectBlood('AB+')" id="bt-ABpos">AB+</button>
+                <button class="blood-btn" onclick="selectBlood('AB-')" id="bt-ABneg">AB-</button>
+                <button class="blood-btn" onclick="selectBlood('O+')" id="bt-Opos">O+</button>
+                <button class="blood-btn" onclick="selectBlood('O-')" id="bt-Oneg">O-</button>
+            </div>
+            <label class="field-label">MEDICAL CONDITIONS</label>
+            <textarea id="med-conditions" class="matrix-text-field" rows="2" placeholder="e.g. Diabetes Type 2, Hypertension" style="width:100%;margin-bottom:10px"></textarea>
+            <label class="field-label">CURRENT MEDICATIONS</label>
+            <textarea id="med-medications" class="matrix-text-field" rows="2" placeholder="e.g. Metformin 500mg" style="width:100%;margin-bottom:10px"></textarea>
+            <label class="field-label">ALLERGIES</label>
+            <textarea id="med-allergies" class="matrix-text-field" rows="2" placeholder="e.g. Penicillin, Aspirin" style="width:100%;margin-bottom:10px"></textarea>
+            <label class="field-label">EMERGENCY NOTES</label>
+            <textarea id="med-emergency-notes" class="matrix-text-field" rows="2" placeholder="e.g. DNR on file, pacemaker" style="width:100%;margin-bottom:16px"></textarea>
+            <button onclick="saveMedicalProfile()" class="prime-btn" style="width:100%">SAVE MEDICAL PROFILE</button>
+        </div>
+
+        <!-- ANALYTICS TAB -->
+        <div id="tab-analytics" class="tab-panel">
+            <div class="card-header" style="margin-bottom:12px">OPERATIONS ANALYTICS</div>
+            <div class="stat-grid">
+                <div class="stat-box"><div class="stat-num" id="stat-total">—</div><div class="stat-lbl">TOTAL INCIDENTS</div></div>
+                <div class="stat-box green"><div class="stat-num" id="stat-resolved">—</div><div class="stat-lbl">RESOLVED</div></div>
+                <div class="stat-box yellow"><div class="stat-num" id="stat-active">—</div><div class="stat-lbl">ACTIVE NOW</div></div>
+                <div class="stat-box blue"><div class="stat-num" id="stat-drills">—</div><div class="stat-lbl">DRILLS RUN</div></div>
+            </div>
+            <div class="card-header" style="margin-bottom:10px">RECENT AUDIT LOG</div>
+            <div id="audit-log-display" style="max-height:280px;overflow-y:auto"><div class="empty-state">Loading…</div></div>
+            <button onclick="loadAnalytics()" style="width:100%;padding:8px;margin-top:10px;background:#1e293b;border:1px solid #334155;color:#94a3b8;font-family:monospace;font-size:0.68rem;border-radius:4px;cursor:pointer">↻ REFRESH</button>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div id="tab-settings" class="tab-panel">
+            <div class="card-header" style="margin-bottom:10px">CRITICAL ROUTING MATRIX</div>
+            <div class="matrix-input-grid">
+                <div class="input-node-group"><label>1. Primary Contact</label><input type="tel" id="input-primary" class="matrix-text-field" placeholder="+27821234567"></div>
+                <div class="input-node-group"><label>2. Secondary Contact</label><input type="tel" id="input-secondary" class="matrix-text-field" placeholder="+27831234567"></div>
+                <div class="input-node-group"><label>3. Tertiary Contact</label><input type="tel" id="input-tertiary" class="matrix-text-field" placeholder="+27841234567"></div>
+                <div class="input-node-group"><label>4. WhatsApp Dispatch</label><input type="tel" id="input-whatsapp" class="matrix-text-field" placeholder="+27851234567"></div>
+                <div class="input-node-group"><label>5. Police Authority</label><input type="tel" id="input-police" class="matrix-text-field" placeholder="10111"></div>
+                <button id="save-routing-btn" class="prime-btn" style="margin-top:10px;width:100%">SAVE TELEPHONY MATRIX</button>
+            </div>
+
+            <div class="card-header" style="margin:16px 0 8px">BLE BEACON SCANNER (HST-01)</div>
+            <div id="ble-status" style="font-family:monospace;font-size:0.68rem;color:#475569;margin-bottom:8px">BLE: Not scanning</div>
+            <div id="ble-device-list" style="max-height:120px;overflow-y:auto;margin-bottom:10px"></div>
+            <div style="display:flex;gap:8px">
+                <button onclick="startBLEScan()" style="flex:1;padding:8px;background:#1e3a5f;border:1px solid #3b82f6;color:#93c5fd;font-family:monospace;font-size:0.68rem;border-radius:4px;cursor:pointer">START SCAN</button>
+                <button onclick="stopBLEScan()" style="flex:1;padding:8px;background:#1e293b;border:1px solid #334155;color:#64748b;font-family:monospace;font-size:0.68rem;border-radius:4px;cursor:pointer">STOP</button>
+            </div>
+
+            <div class="card-header" style="margin:16px 0 8px">ADMIN / ORG CONFIG</div>
+            <div style="font-family:monospace;font-size:0.68rem;color:#94a3b8;margin-bottom:4px">Org: <span id="org-id-display" style="color:#f8fafc">—</span></div>
+            <div style="font-family:monospace;font-size:0.68rem;color:#94a3b8;margin-bottom:14px">Operator: <span id="operator-display" style="color:#f8fafc">—</span></div>
+            <button id="sign-out-btn" class="prime-btn" style="width:100%;background:none;border:1px solid rgba(255,255,255,0.2);color:#94a3b8">DE-PROVISION DEVICE</button>
+        </div>
+    </div>
+
+    <!-- COUNTDOWN OVERLAY (GPS resolves BEFORE countdown starts) -->
+    <div id="countdown-overlay" class="overlay-modal hidden">
+        <div class="overlay-glass-card">
+            <div class="threat-alert-banner">🚨 EXTREME THREAT — ESCALATION ENGAGED</div>
+            <div id="countdown-text" class="giant-numerical-countdown">15</div>
+            <p class="escalation-notice-text" id="escalation-tier-label">TIER 1 — SMS dispatched to all contacts.</p>
+            <p class="escalation-notice-text" style="font-size:0.62rem;color:#94a3b8">Sequential call pipeline fires on countdown end.</p>
+            <button class="call-next-btn" id="call-next-btn" onclick="manualCallNext()">⏭ TAP TO CALL NEXT CONTACT</button>
+            <button id="disarm-btn" class="abort-defense-trigger">DISARM &amp; ABORT PIPELINE</button>
+        </div>
+    </div>
+
+    <!-- INCIDENT DETAIL MODAL -->
+    <div id="incident-modal" class="overlay-modal hidden">
+        <div class="overlay-glass-card" style="max-height:80vh;overflow-y:auto;width:90vw;max-width:400px">
+            <div id="incident-modal-content"></div>
+            <button onclick="closeIncidentModal()" style="margin-top:12px;width:100%;padding:10px;background:#1e293b;border:1px solid #334155;color:#94a3b8;font-family:monospace;font-size:0.75rem;border-radius:6px;cursor:pointer">CLOSE</button>
+        </div>
+    </div>
+
+</div>
+<script src="leaflet.js"></script>
+<script src="cordova.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
