@@ -1,0 +1,13 @@
+name: Check Duetto workers.dev address
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: workers.dev endpoints
+        run: |
+          H=$(curl -s -m 30 -o /dev/null -w "%{http_code}" https://duetto-server.tshilidzi-mukwevho54.workers.dev/duetto/healthz)
+          echo "::notice::workers.dev healthz HTTP $H"
+          I=$(curl -s -m 30 https://duetto-server.tshilidzi-mukwevho54.workers.dev/duetto/ice-servers | head -c 200)
+          echo "::notice::workers.dev ice-servers $I"
