@@ -1,0 +1,29 @@
+name: Deploy Duetto server
+on:
+  push:
+    branches: [main]
+    paths: ['duetto-server/**']
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install
+        working-directory: duetto-server
+        run: npm install
+      - name: Deploy to Cloudflare
+        working-directory: duetto-server
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_WORKERS_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: d089bef8b0b58c5d9506b512ec2f63dc
+        run: npx wrangler deploy
+      - name: Check the server is live
+        run: |
+          sleep 15
+          curl -sf https://duetto.safetylink.online/duetto/healthz && echo " <- healthz OK"
+          curl -s https://duetto.safetylink.online/duetto/ice-servers | head -c 200; echo
