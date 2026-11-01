@@ -1,0 +1,13 @@
+name: Check Duetto is live
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Health and TURN endpoints
+        run: |
+          H=$(curl -s -m 30 -o /dev/null -w "%{http_code}" https://duetto.safetylink.online/duetto/healthz)
+          echo "::notice::healthz HTTP $H"
+          I=$(curl -s -m 30 -w " [HTTP %{http_code}]" https://duetto.safetylink.online/duetto/ice-servers | head -c 240)
+          echo "::notice::ice-servers $I"
