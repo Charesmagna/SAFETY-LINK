@@ -1,0 +1,16 @@
+name: Check website loading
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: site
+        run: |
+          curl -s -m 30 -o /tmp/index.html -w "index HTTP %{http_code}\n" https://safetylink.online/ | tee /tmp/a.txt
+          echo "::notice::$(cat /tmp/a.txt)"
+          echo "::notice::scripts: $(grep -o 'src="[^"]*\.js"' /tmp/index.html | head -4 | tr '\n' ' ')"
+          curl -s -m 30 -o /tmp/v.json -w "version.json HTTP %{http_code}\n" https://safetylink.online/version.json
+          echo "::notice::$(cat /tmp/v.json | head -c 200)"
+          curl -s -m 30 -o /dev/null -w "sw.js HTTP %{http_code}\n" https://safetylink.online/sw.js
+          echo "::notice::loader text: $(grep -o 'Clearing cached[^<"]*' /tmp/index.html | head -1)"
