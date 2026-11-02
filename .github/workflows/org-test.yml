@@ -1,0 +1,14 @@
+name: Test organisation sign-up (server codes)
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: create two test organisations
+        run: |
+          U=https://safetylink-api.tshilidzi-mukwevho54.workers.dev/api/register-org
+          for i in 1 2; do
+            R=$(curl -s -m 30 -X POST $U -H 'Content-Type: application/json' -d "{\"orgName\":\"Test Safety Co\",\"email\":\"test$i-$RANDOM@example.com\",\"password\":\"TestPass$RANDOM!\",\"contactName\":\"Test\"}")
+            echo "::notice::test org $i -> $R" | cut -c1-260
+          done
