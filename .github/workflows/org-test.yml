@@ -9,6 +9,6 @@ jobs:
         run: |
           U=https://safetylink-api.tshilidzi-mukwevho54.workers.dev/api/register-org
           for i in 1 2; do
-            R=$(curl -s -m 30 -X POST $U -H 'Content-Type: application/json' -d "{\"orgName\":\"Test Safety Co\",\"email\":\"test$i-$RANDOM@example.com\",\"password\":\"TestPass$RANDOM!\",\"contactName\":\"Test\"}")
+            R=$(curl -s -m 30 -w " [HTTP %{http_code}]" -X POST $U -H "Content-Type: application/json" -d "{\"orgName\":\"Test Safety Co\",\"email\":\"test$i-$RANDOM@example.com\",\"password\":\"TestPass$RANDOM!\",\"contactName\":\"Test\"}")
             echo "::notice::test org $i -> $R" | cut -c1-260
           done
