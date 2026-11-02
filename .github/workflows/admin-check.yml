@@ -1,0 +1,13 @@
+name: Check superadmin login endpoint
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: server responds to admin login
+        run: |
+          A=$(curl -s -m 30 -o /tmp/a.txt -w "%{http_code}" -X POST https://safetylink-api.tshilidzi-mukwevho54.workers.dev/api/admin/login -H 'Content-Type: application/json' -d '{"email":"safetylink","password":"wrong-test-value"}')
+          echo "::notice::admin login with a wrong password -> HTTP $A $(head -c 120 /tmp/a.txt)"
+          L=$(curl -s -m 30 -o /dev/null -w "%{http_code}" https://safetylink-api.tshilidzi-mukwevho54.workers.dev/api/app/latest)
+          echo "::notice::latest endpoint -> HTTP $L"
