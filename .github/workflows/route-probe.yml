@@ -1,0 +1,17 @@
+name: Probe server routes
+on:
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: probe
+        run: |
+          B=https://safetylink-api.tshilidzi-mukwevho54.workers.dev
+          J='-H Content-Type:application/json -d {"orgName":"Probe Co","email":"probe@example.com","password":"ProbePass1!","contactName":"P"}'
+          for p in /api/register-org /api/auth/register-org /api/register /api/auth/register-user; do
+            c=$(curl -s -m 30 -o /tmp/b.txt -w "%{http_code}" -X POST $B$p -H 'Content-Type: application/json' -d '{"orgName":"Probe Co","email":"probe@example.com","password":"ProbePass1!","contactName":"P"}')
+            echo "::notice::POST $p -> $c $(head -c 90 /tmp/b.txt)"
+          done
+          g=$(curl -s -m 30 -o /dev/null -w "%{http_code}" $B/api/register-org)
+          echo "::notice::GET /api/register-org -> $g"
