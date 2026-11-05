@@ -1,0 +1,16 @@
+name: Test forwarder signature on the webhook
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: signed Please Call Me, same format as the forwarder
+        run: |
+          SECRET='32b9c64667bcebb2c1cd698e53b7fdea5c1817dcc772d5155900af1d0dc8356f'
+          BODY='{"from":"+27680079911","text":"Please call me at 0680079911","sentStamp":1762300000000,"receivedStamp":1762300000500,"sim":"sim1"}'
+          SIG=$(printf '%s' "$BODY" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')
+          C=$(curl -s -m 30 -o /tmp/r.txt -w "%{http_code}" -X POST https://safetylink-api.tshilidzi-mukwevho54.workers.dev/webhook/pcm -H 'Content-Type: application/json' -H "X-Signature: $SIG" -d "$BODY")
+          echo "::notice::signed webhook -> HTTP $C $(head -c 160 /tmp/r.txt)"
+          B=$(curl -s -m 30 -o /tmp/r2.txt -w "%{http_code}" -X POST https://safetylink-api.tshilidzi-mukwevho54.workers.dev/webhook/pcm -H 'Content-Type: application/json' -d "$BODY")
+          echo "::notice::unsigned webhook -> HTTP $B $(head -c 160 /tmp/r2.txt)"
