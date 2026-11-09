@@ -1,0 +1,14 @@
+name: Check app preflight requests
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: preflight for register and login from the app origin
+        run: |
+          B=https://safetylink-api.tshilidzi-mukwevho54.workers.dev
+          for p in /api/register /api/login /api/admin/login; do
+            curl -s -m 30 -X OPTIONS -H "Origin: https://localhost" -H "Access-Control-Request-Method: POST" -H "Access-Control-Request-Headers: content-type" $B$p -D /tmp/o.txt -o /dev/null
+            echo "::notice::OPTIONS $p -> $(head -1 /tmp/o.txt | tr -d '\r') | $(grep -i 'access-control-allow-origin' /tmp/o.txt | tr -d '\r')"
+          done
