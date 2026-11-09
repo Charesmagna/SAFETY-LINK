@@ -1,0 +1,11 @@
+name: Check app cross-origin header
+on:
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: admin login reply headers
+        run: |
+          curl -s -m 30 -X POST -H "Origin: https://localhost" -H "Content-Type: application/json" -d '{"email":"safetylink","password":"x"}' https://safetylink-api.tshilidzi-mukwevho54.workers.dev/api/admin/login -D /tmp/h.txt -o /tmp/b.txt
+          echo "::notice::$(grep -i 'access-control-allow-origin' /tmp/h.txt | tr -d '\r' || echo 'NO CORS HEADER') | $(head -1 /tmp/h.txt | tr -d '\r')"
