@@ -1,0 +1,16 @@
+name: Test organisation owner sign-in
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: create an organisation and sign in as its owner
+        run: |
+          B=https://safetylink-api.tshilidzi-mukwevho54.workers.dev
+          E="owner$RANDOM@example.com"; P="OwnerPass$RANDOM!"
+          R=$(curl -s -m 30 -X POST $B/api/register-org -H 'Content-Type: application/json' -d "{\"orgName\":\"Owner Test Co\",\"email\":\"$E\",\"password\":\"$P\",\"contactName\":\"Owner\"}")
+          ID=$(echo "$R" | python3 -c "import sys,json;print(json.load(sys.stdin).get('org_code',''))")
+          echo "::notice::created org code: $ID"
+          L=$(curl -s -m 30 -w " [HTTP %{http_code}]" -X POST $B/api/login -H 'Content-Type: application/json' -d "{\"username\":\"Owner\",\"password\":\"$P\",\"orgCode\":\"$ID\"}")
+          echo "::notice::owner sign-in with org code: $(echo "$L" | head -c 200)"
